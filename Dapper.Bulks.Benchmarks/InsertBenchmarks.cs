@@ -4,11 +4,12 @@ using Npgsql;
 
 namespace Dapper.Bulks.Benchmarks;
 
+[MemoryDiagnoser]
 public class InsertBenchmarks
 {
     private readonly IDbConnection _connection;
     private readonly DapperContext _context;
-    private readonly IList<Document> _entities;
+    private readonly List<Document> _entities;
 
     public InsertBenchmarks()
     {
@@ -21,7 +22,7 @@ public class InsertBenchmarks
     [Benchmark]
     public async Task<int> MyBulkInsert()
     {
-        return await _context.BulkInsertAsync(new InsertColumn("id, content"), _entities);
+        return await _context.BulkInsertAsync(new InsertColumn(["id", "content"]), _entities);
     }
 
     [Benchmark(Baseline = true)]
@@ -31,17 +32,13 @@ public class InsertBenchmarks
         return await _connection.ExecuteAsync(sql, _entities);
     }
 
-    private IList<Document> GenerateEntities(int count)
+    private List<Document> GenerateEntities(int count)
     {
         var entities = new List<Document>();
         for (int i = 0; i < count; i++)
-            entities.Add(new Document { Id = i, Content = $"Content - {i}"});
+            entities.Add(new Document(i, $"Content - {i}"));
         return entities;
     }
 
-    class Document
-    {
-        public int Id { get; set; }
-        public string Content { get; set; }
-    }
+    record Document(int Id, string Content);
 }

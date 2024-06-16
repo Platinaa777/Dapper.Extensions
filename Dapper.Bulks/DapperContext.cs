@@ -17,7 +17,7 @@ public class DapperContext(IDbConnection connection) : IDisposable
             return 0;
 
         var props = typeof(T)
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
             .Where(x => insertColumn.Contains(x.Name))
             .ToArray();
         
