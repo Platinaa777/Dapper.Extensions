@@ -1,5 +1,20 @@
 namespace Dapper.Bulks;
 
+public class Table(string tableName)
+{
+    private string TableName { get; } = tableName;
+
+    public static implicit operator string(Table table)
+    {
+        return table.TableName;
+    }
+
+    public override string ToString()
+    {
+        return this;
+    }
+}
+
 public class InsertColumn
 {
     private readonly string[] _columns;
