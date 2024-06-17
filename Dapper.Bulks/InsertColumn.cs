@@ -8,6 +8,11 @@ public class Table(string tableName)
     {
         return table.TableName;
     }
+    
+    public static implicit operator Table(string table)
+    {
+        return new(table);
+    }
 
     public override string ToString()
     {
